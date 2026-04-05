@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Guide: Demand Response & Regression (PYQs)</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --primary: #2563eb;
+            --secondary: #14b8a6;
+            --accent: #f59e0b;
+            --violet: #7c3aed;
+            --rose: #e11d48;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .math-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 14px 30px -20px rgba(15,23,42,0.25);
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 3rem;
+            }
+        }
+
+        .table-header {
+            background: #f8fafc;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-cell {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .badge {
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-16">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- HEADER BLOCK -->
+        <div class="text-center mb-20 mt-8">
+            <span class="badge bg-blue-100 text-blue-700 inline-block mb-6">Week 4 • Problem Solving (PYQs)</span>
+            <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter title-gradient mb-6 leading-tight">Applied Analytics &<br>Model Extraction</h1>
+            <p class="text-xl text-slate-400 font-light tracking-wide italic max-w-2xl mx-auto">Solving previous year questions: elasticity formulas, linear boundaries, and regression ANOVA tables.</p>
+        </div>
+
+        <!-- SECTION 01: Application Strategy -->
+        <div class="card border-t-8 border-blue-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-blue-500 shadow-md">01</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Application Strategy & Common Pitfalls</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                When solving applied elasticity problems, the most critical step is identifying which <strong class="underline decoration-blue-500 decoration-[3px] text-slate-800">elasticity framework</strong> to deploy based on the given variables. Using the wrong definition for a specific problem type is the most common mathematical pitfall.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-2">Point Elasticity (Derivative)</h4>
+                    <p class="text-sm text-slate-600">Used when you are given an explicit equation (e.g., $D = 1500 - 20P$) and asked for elasticity at a <strong class="text-blue-600">specific single price point</strong>.</p>
+                </div>
+                <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-2">Arc Elasticity (Percentage)</h4>
+                    <p class="text-sm text-slate-600">Used when you are given <strong class="text-emerald-600">two discrete states</strong> (an initial Price/Quantity and a final Price/Quantity) without an underlying equation.</p>
+                </div>
+            </div>
+            
+            <div class="bg-slate-900 p-8 rounded-[2rem] border border-slate-800 shadow-inner">
+                <h3 class="text-rose-400 font-bold mb-3 uppercase tracking-widest text-xs">Crucial Wordplay Warning</h3>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    Pay extreme attention to phrasing like <span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded">"raised BY ₹5"</span> versus <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">"raised TO ₹5"</span>. The former indicates a delta ($\Delta P$), while the latter indicates the final absolute value ($P_f$). Failing to make this distinction breaks all percentage change formulas.
+                </p>
+            </div>
+        </div>
+
+        <!-- SECTION 02: Linear Demand Model (Solved) -->
+        <div class="card border-t-8 border-violet-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-violet-500 shadow-md">02</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Linear Demand Model (Solved)</h2>
+            </div>
+            
+            <div class="bg-slate-900 rounded-[2.5rem] p-12 text-white text-center shadow-2xl mb-8 border border-slate-800 relative overflow-hidden">
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-violet-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+                
+                <p class="text-slate-400 text-xs font-bold tracking-[0.2em] uppercase mb-4 relative z-10">Given Equation</p>
+                <div class="text-4xl md:text-5xl math-font font-black text-violet-300 relative z-10">
+                    $$ D(P) = 1500 - 20P $$
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Market Size -->
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Question 1</span>
+                        <h4 class="font-bold text-slate-800 mt-2">Market Size ($D_0$)</h4>
+                        <p class="text-sm text-slate-500 mt-2">The absolute maximum demand when product is given for free ($P = 0$).</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100">
+                        <p class="text-2xl font-black text-violet-600 math-font">1500 units</p>
+                    </div>
+                </div>
+
+                <!-- Satiating Price -->
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Question 2</span>
+                        <h4 class="font-bold text-slate-800 mt-2">Satiating Price ($P_{sat}$)</h4>
+                        <p class="text-sm text-slate-500 mt-2">The exact price where demand drops to zero. <span class="math-font text-xs bg-slate-100 px-1 rounded">$1500 - 20P = 0$</span></p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100">
+                        <p class="text-2xl font-black text-rose-500 math-font">₹ 75</p>
+                    </div>
+                </div>
+
+                <!-- Point Elasticity -->
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Question 3</span>
+                        <h4 class="font-bold text-slate-800 mt-2">Elasticity at $P=50$</h4>
+                        <p class="text-sm text-slate-500 mt-2">Using $E = \left|\frac{mP}{D_0 - mP}\right|$. <br><span class="math-font text-xs text-slate-400">$(20 \cdot 50) / (1500 - 1000)$</span></p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100">
+                        <p class="text-2xl font-black text-blue-500 math-font">$E = 2$</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-sm text-slate-500 mt-6 text-center italic">
+                Because $E = 2$ (which is $> 1$), the product is highly <strong>elastic</strong> at $P=50$. A 10% change in price causes a 20% opposite change in demand.
+            </p>
+        </div>
+
+        <!-- SECTION 03: Discrete Data & Arc Elasticity -->
+        <div class="card border-t-8 border-rose-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-rose-500 shadow-md">03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Discrete Data & Percentage Change</h2>
+            </div>
+            
+            <div class="bg-rose-50 rounded-[2rem] border border-rose-100 p-8 shadow-sm mb-8">
+                <h4 class="text-rose-800 font-black uppercase tracking-widest text-sm mb-4">The Buttermilk Scenario</h4>
+                <p class="text-rose-900 text-sm leading-relaxed mb-6">
+                    A grocer raises the price of buttermilk <strong>by ₹5 to ₹15</strong>. The demand falls from <strong>100 units to 80 units</strong>. Calculate the elasticity and state the product's nature.
+                </p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-rose-50">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Initial Price ($P_i$)</p>
+                        <p class="text-xl font-black text-slate-800 math-font mt-1">₹ 10</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-rose-50">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Final Price ($P_f$)</p>
+                        <p class="text-xl font-black text-slate-800 math-font mt-1">₹ 15</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-rose-50">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Initial Qty ($Q_i$)</p>
+                        <p class="text-xl font-black text-slate-800 math-font mt-1">100</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-rose-50">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Final Qty ($Q_f$)</p>
+                        <p class="text-xl font-black text-slate-800 math-font mt-1">80</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 border-2 border-rose-200">
+                    <p class="text-sm text-slate-600 mb-4">Apply the base percentage change formula:</p>
+                    <div class="text-2xl text-center font-black text-rose-600 math-font mb-4">
+                        $$ E = \left| \frac{(80 - 100) / 100}{(15 - 10) / 10} \right| = \left| \frac{-20\%}{+50\%} \right| = 0.4 $$
+                    </div>
+                    <div class="border-t border-slate-100 pt-4 mt-4 flex items-start gap-4">
+                        <div class="text-2xl mt-1">💡</div>
+                        <div>
+                            <p class="text-slate-800 font-extrabold text-base">Conclusion: Inelastic ($E < 1$)</p>
+                            <p class="text-slate-600 text-sm mt-1 font-medium leading-relaxed">Because the 50% price hike only caused a 20% drop in volume, the product is inelastic. The grocer successfully increased overall revenue by raising the price.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 04: Constant Elasticity Extraction -->
+        <div class="card border-t-8 border-orange-500">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-orange-500 shadow-md">04</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Non-Linear Model Extraction</h2>
+            </div>
+            
+            <div class="space-y-8 px-2 md:px-6">
+                <!-- Data Given -->
+                <div>
+                    <h4 class="font-extrabold text-slate-800 text-lg mb-2">Given Two Observations on a Constant Curve</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">If a dataset explicitly states it follows a constant elasticity curve ($D = C \cdot P^{-\epsilon}$), you can extract parameters perfectly using just two coordinates.</p>
+                    
+                    <div class="flex gap-4 mb-6">
+                        <div class="bg-slate-50 px-4 py-2 rounded-lg border border-slate-200 math-font text-slate-800 font-bold">$P_1 = 20, \ D_1 = 0.5$</div>
+                        <div class="bg-slate-50 px-4 py-2 rounded-lg border border-slate-200 math-font text-slate-800 font-bold">$P_2 = 40, \ D_2 = 0.25$</div>
+                    </div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="flex gap-6 items-start relative">
+                    <div class="absolute left-[1.15rem] top-10 bottom-[-2rem] w-0.5 bg-orange-100"></div>
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 font-black flex items-center justify-center flex-shrink-0 mt-1 shadow-sm relative z-10 border-2 border-white">1</div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-lg">Extract Elasticity ($\epsilon$)</h4>
+                        <p class="text-slate-600 text-base mt-2 leading-relaxed">
+                            Use the logarithmic ratio derived from dividing the two state equations:
+                            <span class="block mt-3 bg-white p-4 rounded-xl border border-slate-200 math-font text-center shadow-sm">
+                                $$ \epsilon = \frac{\ln(D_1/D_2)}{\ln(P_2/P_1)} = \frac{\ln(0.5/0.25)}{\ln(40/20)} = \frac{\ln(2)}{\ln(2)} = 1 $$
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="flex gap-6 items-start">
+                    <div class="w-10 h-10 rounded-full bg-orange-500 text-white font-black flex items-center justify-center flex-shrink-0 mt-1 shadow-md relative z-10 border-2 border-white">2</div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-lg">Calculate Constant ($C$)</h4>
+                        <p class="text-slate-600 text-base mt-2 leading-relaxed">
+                            Plug the elasticity back into either coordinate pair to solve for the scaling constant $C$:
+                            <span class="block mt-3 bg-white p-4 rounded-xl border border-slate-200 math-font text-center shadow-sm">
+                                $$ C = D_1 \cdot P_1^\epsilon = 0.5 \cdot 20^1 = 10 $$
+                            </span>
+                        </p>
+                        <p class="text-sm text-slate-500 mt-4 italic">Final Equation: $D(P) = 10 \cdot P^{-1}$</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 p-8 bg-red-50 border border-red-200 rounded-[2.5rem] text-center shadow-inner">
+                <p class="text-red-800 font-bold tracking-widest uppercase text-xs mb-3">Theoretical Myth Busted</p>
+                <h4 class="text-xl font-black text-red-700 mb-2">Satiating Price on a Constant Curve?</h4>
+                <p class="text-red-900 text-sm">
+                    It <strong>does not exist</strong>. For $D = C \cdot P^{-\epsilon}$, there is no mathematical value for $P$ that makes $D = 0$. The curve approaches the axis asymptotically but never touches it.
+                </p>
+            </div>
+        </div>
+
+        <!-- SECTION 05: Regression ANOVA -->
+        <div class="card border-t-8 border-emerald-500 mb-20">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-emerald-500 shadow-md">05</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Regression Evaluation (ANOVA)</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                When modeling demand via simple linear regression in software (like Excel), understanding the underlying relationships in the ANOVA output table is vital for interpreting the statistical significance of your fit.
+            </p>
+
+            <!-- ANOVA Definitions -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-emerald-50 rounded-3xl p-6 border border-emerald-100">
+                    <h4 class="font-bold text-emerald-900 mb-4 border-b border-emerald-200 pb-2">Null Hypotheses ($H_0$)</h4>
+                    <ul class="space-y-3 text-sm text-emerald-800">
+                        <li class="flex items-start gap-2">
+                            <span class="font-black">•</span>
+                            <span><strong>Intercept is not significant:</strong> $\beta_0 = 0$</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="font-black">•</span>
+                            <span><strong>Slope is not significant:</strong> $\beta_1 = 0$</span>
+                        </li>
+                    </ul>
+                    <p class="mt-4 text-xs italic text-emerald-700">We want to reject these to prove our model captures a real trend.</p>
+                </div>
+
+                <div class="bg-slate-900 rounded-3xl p-6 border border-slate-800 shadow-xl text-white">
+                    <h4 class="font-bold text-blue-400 mb-4 border-b border-slate-700 pb-2">Degrees of Freedom ($df$) Rules</h4>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center justify-between">
+                            <span>Total $df$</span>
+                            <span class="math-font font-bold text-white">$n - 1$</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span>Regression $df$</span>
+                            <span class="math-font font-bold text-white">$k \ (\text{variables})$</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span>Residual $df$</span>
+                            <span class="math-font font-bold text-white">$n - k - 1$</span>
+                        </li>
+                    </ul>
+                    <p class="mt-4 text-xs italic text-slate-400 border-t border-slate-700 pt-3">Observation Count ($n$) = Total $df$ + 1</p>
+                </div>
+            </div>
+
+            <div class="border-b-4 border-slate-300 inline-block pb-2 mb-6 mt-4">
+                <h3 class="text-xl font-bold uppercase tracking-widest text-slate-800">Reconstructing the Output</h3>
+            </div>
+
+            <div class="overflow-hidden rounded-[1.5rem] border border-slate-200 shadow-sm">
+                <table class="w-full text-left border-collapse bg-white">
+                    <thead>
+                        <tr>
+                            <th class="table-header w-1/4 text-slate-500">Source</th>
+                            <th class="table-header w-1/4 text-slate-500">Sum of Squares (SS)</th>
+                            <th class="table-header w-1/4 text-slate-500">Mean Square (MS)</th>
+                            <th class="table-header w-1/4 text-slate-500">F-Statistic</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell font-bold text-slate-700">Regression</td>
+                            <td class="table-cell math-font text-sm">SS_{Reg}</td>
+                            <td class="table-cell math-font text-sm bg-blue-50">$\frac{SS_{Reg}}{df_{Reg}}$</td>
+                            <td class="table-cell math-font text-sm bg-emerald-50 text-emerald-700 font-bold" rowspan="2 align-middle">
+                                $\frac{MS_{Reg}}{MS_{Res}}$
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell font-bold text-slate-700">Residual (Error)</td>
+                            <td class="table-cell math-font text-sm">SS_{Res}</td>
+                            <td class="table-cell math-font text-sm bg-rose-50">$\frac{SS_{Res}}{df_{Res}}$</td>
+                        </tr>
+                        <tr class="bg-slate-50">
+                            <td class="table-cell font-black text-slate-800">Total</td>
+                            <td class="table-cell font-black text-slate-800 math-font text-sm border-t border-slate-200">$SS_{Reg} + SS_{Res}$</td>
+                            <td class="table-cell"></td>
+                            <td class="table-cell"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center pb-12 opacity-20 text-[10px] font-black uppercase tracking-[0.8em] text-slate-800">
+            Synthesized Statistical Notes • Demand & Regression
+        </div>
+
+    </div>
+
+</body>
+</html>
