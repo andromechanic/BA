@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Guide: Demand Response & Regression</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --primary: #2563eb;
+            --secondary: #14b8a6;
+            --accent: #f59e0b;
+            --violet: #7c3aed;
+            --rose: #e11d48;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .math-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 14px 30px -20px rgba(15,23,42,0.25);
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 3rem;
+            }
+        }
+
+        .table-header {
+            background: #f8fafc;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-cell {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .badge {
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-16">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- HEADER BLOCK -->
+        <div class="text-center mb-20 mt-8">
+            <span class="badge bg-blue-100 text-blue-700 inline-block mb-6">Week 4 • Business Analytics</span>
+            <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter title-gradient mb-6 leading-tight">Demand Response &<br>Linear Regression</h1>
+            <p class="text-xl text-slate-400 font-light tracking-wide italic max-w-2xl mx-auto">Modeling consumer behavior, price elasticity, and predicting market demand through statistical synthesis.</p>
+        </div>
+
+        <!-- SECTION 01: Core Concept -->
+        <div class="card border-t-8 border-blue-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-blue-500 shadow-md">01</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Core Concept</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                The Demand Response (DR) curve mathematically visualizes the <strong class="underline decoration-blue-500 decoration-[3px] text-slate-800">Law of Demand</strong>: for standard goods, quantity demanded is inversely proportional to the price. This inverse relationship dictates that as price increases, consumer willingness to purchase decreases. Beyond simple mapping, we aim to measure <span class="italic text-slate-800 font-medium">Latent Demand</span> (unfulfilled demand bounded by affordability) and <span class="italic text-slate-800 font-medium">Consumer Surplus</span> (the residual utility consumers gain when purchasing below their maximum willingness to pay).
+            </p>
+            
+            <div class="bg-blue-50 p-8 rounded-[2rem] border border-blue-100 shadow-inner">
+                <h3 class="text-blue-800 font-bold mb-3 uppercase tracking-widest text-xs">Crucial Optimization Insight</h3>
+                <p class="text-blue-600 text-sm leading-relaxed">
+                    By evaluating demand sensitivity via regression, businesses isolate exactly how a pricing adjustment dynamically shapes total revenue. Depending on product elasticity, a firm might actually multiply aggregate profit by deliberately shrinking price margins.
+                </p>
+            </div>
+        </div>
+
+        <!-- SECTION 02: Mathematical Notation -->
+        <div class="card border-t-8 border-violet-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-violet-500 shadow-md">02</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Mathematical Notation</h2>
+            </div>
+            
+            <div class="bg-slate-900 rounded-[2.5rem] p-12 text-white text-center shadow-2xl mb-8 border border-slate-800 relative overflow-hidden">
+                <!-- Decorative background elements -->
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-violet-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+                
+                <div class="text-5xl md:text-6xl math-font font-black mb-8 text-violet-300 relative z-10">
+                    $$ E = \left| \frac{\Delta Q / Q}{\Delta P / P} \right| = \left| \frac{dQ}{dP} \cdot \frac{P}{Q} \right| $$
+                </div>
+                <p class="text-slate-400 text-xs md:text-sm font-bold tracking-[0.2em] uppercase relative z-10">
+                    Price Elasticity of Demand
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="p-8 bg-slate-50 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <h4 class="font-black text-slate-800 mb-3 text-sm uppercase tracking-wider">Linear DR Curve</h4>
+                    <p class="text-slate-700 text-lg math-font bg-white p-4 rounded-xl border border-slate-200 text-center mb-4">$$ D(p) = D_0 - mp $$</p>
+                    <p class="text-slate-500 text-sm leading-relaxed">Where <span class="badge bg-slate-200 text-slate-700 !px-1 !py-0 !lowercase !tracking-normal">$D_0$</span> is the theoretical market size (absolute maximum demand if price was exactly zero), and $m$ represents the rate of decline.</p>
+                </div>
+                <div class="p-8 bg-slate-50 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <h4 class="font-black text-slate-800 mb-3 text-sm uppercase tracking-wider">Non-Linear DR Curve</h4>
+                    <p class="text-slate-700 text-lg math-font bg-white p-4 rounded-xl border border-slate-200 text-center mb-4">$$ D(p) = C \cdot p^{-\epsilon} $$</p>
+                    <p class="text-slate-500 text-sm leading-relaxed">A constant elasticity curve where <span class="badge bg-slate-200 text-slate-700 !px-1 !py-0 !lowercase !tracking-normal">$\epsilon$</span> represents a static elasticity parameter mapping the exponential relationship directly.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 03: Dataset -->
+        <div class="card border-t-8 border-rose-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-rose-500 shadow-md">03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Empirical Dataset</h2>
+            </div>
+            
+            <div class="overflow-hidden rounded-[2rem] border border-slate-200 shadow-sm">
+                <table class="w-full text-left border-collapse bg-white">
+                    <thead>
+                        <tr>
+                            <th class="table-header w-1/3 text-slate-500">Observation Iteration</th>
+                            <th class="table-header w-1/3 text-slate-500">Market Price ($P$)</th>
+                            <th class="table-header w-1/3 text-slate-500">Total Demand ($Q$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell italic text-rose-500">Sample-01</td>
+                            <td class="table-cell math-font">₹ 1.00</td>
+                            <td class="table-cell math-font text-slate-800">10 units</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell italic text-rose-500">Sample-02</td>
+                            <td class="table-cell math-font">₹ 2.00</td>
+                            <td class="table-cell math-font text-slate-800">8 units</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell italic text-rose-500">Sample-03</td>
+                            <td class="table-cell math-font">₹ 3.00</td>
+                            <td class="table-cell math-font text-slate-800">6 units</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell italic text-rose-500">Sample-04</td>
+                            <td class="table-cell math-font">₹ 4.00</td>
+                            <td class="table-cell math-font text-slate-800">4 units</td>
+                        </tr>
+                        <tr class="bg-slate-900 text-white border-none">
+                            <td class="p-5 text-center text-xs font-bold uppercase tracking-widest text-slate-400">Recorded Trend</td>
+                            <td class="p-5 text-center text-sm font-bold text-rose-400">↑ Linear Increase</td>
+                            <td class="p-5 text-center text-sm font-bold text-emerald-400">↓ Inverse Decrease</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-sm text-slate-500 mt-6 text-center italic">
+                Raw data indicating a distinct but inexact linear trend, prompting the application of Simple Linear Regression (where $Y = \beta_0 + \beta_1 X + \varepsilon$) to capture the overarching behavioral vector.
+            </p>
+        </div>
+
+        <!-- SECTION 04: Calculation Walkthrough -->
+        <div class="card border-t-8 border-orange-500">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-orange-500 shadow-md">04</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Log-Log Transformation Walkthrough</h2>
+            </div>
+            
+            <div class="space-y-8 px-2 md:px-6">
+                <!-- Step 1 -->
+                <div class="flex gap-6 items-start relative">
+                    <div class="absolute left-[1.15rem] top-10 bottom-[-2rem] w-0.5 bg-orange-100"></div>
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 font-black flex items-center justify-center flex-shrink-0 mt-1 shadow-sm relative z-10 border-2 border-white">1</div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-lg">Define the Non-Linear Base</h4>
+                        <p class="text-slate-600 text-base mt-2 leading-relaxed">
+                            Begin with the constant elasticity demand formula: <span class="bg-slate-100 px-2 py-1 rounded-md math-font text-sm">$D = C \cdot P^{-\epsilon}$</span>. Since this is exponential, standard linear regression cannot immediately process historical coordinates directly.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="flex gap-6 items-start relative">
+                    <div class="absolute left-[1.15rem] top-10 bottom-[-2rem] w-0.5 bg-orange-100"></div>
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 font-black flex items-center justify-center flex-shrink-0 mt-1 shadow-sm relative z-10 border-2 border-white">2</div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-lg">Deploy Logarithmic Transformation</h4>
+                        <p class="text-slate-600 text-base mt-2 leading-relaxed">
+                            Apply the natural logarithm ($\ln$) mapping symmetrically to both sides of the equation to mathematically unwrap the exponentiation: 
+                            <span class="block mt-3 bg-slate-50 p-3 rounded-xl border border-slate-200 math-font text-center">$$ \ln(D) = \ln(C \cdot P^{-\epsilon}) $$</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="flex gap-6 items-start relative">
+                    <div class="absolute left-[1.15rem] top-10 bottom-[-2rem] w-0.5 bg-orange-100"></div>
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 font-black flex items-center justify-center flex-shrink-0 mt-1 shadow-sm relative z-10 border-2 border-white">3</div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-lg">Expand via Logarithmic Rules</h4>
+                        <p class="text-slate-600 text-base mt-2 leading-relaxed">
+                            Distribute the log. The multiplicative constant breaks out into an isolated addition, and the exponent ($\epsilon$) steps down to become a multiplier coefficient:
+                            <span class="block mt-3 bg-slate-50 p-3 rounded-xl border border-slate-200 math-font text-center">$$ \ln(D) = \ln(C) - \epsilon \ln(P) $$</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex gap-6 items-start">
+                    <div class="w-10 h-10 rounded-full bg-orange-500 text-white font-black flex items-center justify-center flex-shrink-0 mt-1 shadow-md relative z-10 border-2 border-white">4</div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-lg">Align to Simple Linear Regression</h4>
+                        <p class="text-slate-600 text-base mt-2 leading-relaxed">
+                            The equation is now in strict $Y = \beta_0 + \beta_1X$ format, establishing:
+                            <ul class="mt-3 list-none space-y-2 text-sm">
+                                <li><span class="inline-block w-3 h-3 rounded-full bg-slate-300 mr-2"></span> $Y$ axis maps to <span class="font-bold text-slate-800">$\ln(D)$</span></li>
+                                <li><span class="inline-block w-3 h-3 rounded-full bg-slate-300 mr-2"></span> $X$ axis maps to <span class="font-bold text-slate-800">$\ln(P)$</span></li>
+                                <li><span class="inline-block w-3 h-3 rounded-full bg-slate-300 mr-2"></span> Intercept ($\beta_0$) maps to <span class="font-bold text-slate-800">$\ln(C)$</span></li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 p-8 bg-orange-50 border border-orange-200 rounded-[2.5rem] text-center shadow-inner relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white rounded-full mix-blend-overlay filter blur-xl opacity-50"></div>
+                <p class="text-orange-800 font-bold tracking-widest uppercase text-xs mb-4">Derived Extraction</p>
+                <div class="text-3xl md:text-5xl text-orange-600 font-black math-font">
+                    $$ \text{Elasticity } (\epsilon) = -\beta_1 $$
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 05: Comprehensive Examples -->
+        <div class="card border-t-8 border-emerald-500 mb-20">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-emerald-500 shadow-md">05</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Final Verdict & Application</h2>
+            </div>
+            
+            <div class="border-b-4 border-emerald-500 inline-block pb-2 mb-10">
+                <h3 class="text-xl font-bold uppercase tracking-widest text-slate-800">Optimized Pricing Strategies</h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Perspective A: Inelastic -->
+                <div class="bg-indigo-50 rounded-[2rem] border border-indigo-100 p-8 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-8xl math-font font-black text-indigo-800">I</span>
+                    </div>
+                    <h4 class="text-indigo-800 font-black uppercase tracking-widest text-sm mb-4">Inelastic Demand</h4>
+                    <div class="math-font text-3xl text-indigo-600 font-bold mb-6 bg-white inline-block px-4 py-2 rounded-xl border border-indigo-100 shadow-sm">
+                        $E < 1$
+                    </div>
+                    <p class="text-indigo-900 text-sm leading-relaxed mb-8 relative z-10">
+                        The product is largely essential (e.g., specific medicines). Demand is structurally rigid. A 20% increase in price restricts demand by <strong class="bg-indigo-200 px-2 py-0.5 rounded text-indigo-900">less than 20%</strong>.
+                    </p>
+                    <div class="bg-white rounded-2xl p-5 border-2 border-indigo-100 relative z-10 shadow-sm">
+                        <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Prescribed Action</p>
+                        <p class="text-indigo-700 font-extrabold text-base">Increase Price aggressively</p>
+                        <p class="text-indigo-500 text-xs mt-1 font-medium">To forcibly maximize revenue multiplier.</p>
+                    </div>
+                </div>
+
+                <!-- Perspective B: Elastic -->
+                <div class="bg-emerald-50 rounded-[2rem] border border-emerald-100 p-8 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-8xl math-font font-black text-emerald-800">E</span>
+                    </div>
+                    <h4 class="text-emerald-800 font-black uppercase tracking-widest text-sm mb-4">Elastic Demand</h4>
+                    <div class="math-font text-3xl text-emerald-600 font-bold mb-6 bg-white inline-block px-4 py-2 rounded-xl border border-emerald-100 shadow-sm">
+                        $E > 1$
+                    </div>
+                    <p class="text-emerald-900 text-sm leading-relaxed mb-8 relative z-10">
+                        Consumers operate with high price-sensitivity (luxury goods/high substitutes). A minor price increase triggers a <strong class="bg-emerald-200 px-2 py-0.5 rounded text-emerald-900">massive drop</strong> in active demand volume.
+                    </p>
+                    <div class="bg-white rounded-2xl p-5 border-2 border-emerald-100 relative z-10 shadow-sm">
+                        <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">Prescribed Action</p>
+                        <p class="text-emerald-700 font-extrabold text-base">Decrease Price strategically</p>
+                        <p class="text-emerald-500 text-xs mt-1 font-medium">To capture volume and maximize revenue.</p>
+                    </div>
+                </div>
+                
+                <!-- Unit Elastic -->
+                <div class="md:col-span-2 bg-slate-900 rounded-[2rem] border border-slate-800 p-8 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-slate-700 via-slate-900 to-slate-900 opacity-50"></div>
+                    
+                    <div class="relative z-10">
+                        <h4 class="text-white font-black uppercase tracking-widest text-sm mb-3">Unit Elastic Condition</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-lg">
+                            The percentage change in price mirrors the percentage change in quantity perfectly. The revenue structure is natively saturated and mathematically optimized.
+                        </p>
+                    </div>
+                    <div class="relative z-10 math-font text-4xl text-slate-800 font-black px-8 py-4 bg-white rounded-2xl border-4 border-slate-700 shadow-2xl shrink-0">
+                        $E = 1$
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center pb-12 opacity-20 text-[10px] font-black uppercase tracking-[0.8em] text-slate-800">
+            Synthesized Statistical Notes • Demand & Regression
+        </div>
+
+    </div>
+
+</body>
+</html>
