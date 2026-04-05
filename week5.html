@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Guide: Optimization & LPP</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --primary: #2563eb;
+            --secondary: #14b8a6;
+            --accent: #f59e0b;
+            --violet: #7c3aed;
+            --rose: #e11d48;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .math-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 14px 30px -20px rgba(15,23,42,0.25);
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 3rem;
+            }
+        }
+
+        .table-header {
+            background: #f8fafc;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-cell {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .badge {
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-16">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- HEADER BLOCK -->
+        <div class="text-center mb-20 mt-8">
+            <span class="badge bg-orange-100 text-orange-700 inline-block mb-6">Week 5 • Business Analytics</span>
+            <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter title-gradient mb-6 leading-tight">Optimization &<br>Linear Programming</h1>
+            <p class="text-xl text-slate-400 font-light tracking-wide italic max-w-2xl mx-auto">Maximizing profit, formulating constraints, and translating models through Primal-Dual conversion.</p>
+        </div>
+
+        <!-- SECTION 01: Core Concept -->
+        <div class="card border-t-8 border-blue-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-blue-500 shadow-md">01</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">The Optimization Paradigm</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                Optimization in business analytics is the mathematical process of maximizing or minimizing a target metric (like revenue or cost) subject to a set of realistic restrictions. We call the metric the <strong class="underline decoration-blue-500 decoration-[3px] text-slate-800">Objective Function</strong>, and the limitations are the <strong class="underline decoration-blue-500 decoration-[3px] text-slate-800">Constraints</strong>.
+            </p>
+
+            <div class="bg-blue-50 p-8 rounded-[2rem] border border-blue-100 shadow-inner">
+                <h3 class="text-blue-800 font-bold mb-3 uppercase tracking-widest text-xs">The Core Business Metrics</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <div class="mt-1 w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></div>
+                        <p class="text-blue-900 text-sm"><strong class="font-bold">Revenue:</strong> The gross income generated ($P \times Q$). It maps as a downward-facing parabola against linear demand.</p>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <div class="mt-1 w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></div>
+                        <p class="text-blue-900 text-sm"><strong class="font-bold">Profit ($\pi$):</strong> Revenue minus total operational costs. Profit isolates the margin: $(P - c) \times Q$, where $c$ is the marginal cost to manufacture one good.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECTION 02: Calculus of Maximization -->
+        <div class="card border-t-8 border-violet-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-violet-500 shadow-md">02</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Calculus of Maximization</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                Assuming a linear demand response curve $Q(P) = D_0 - mP$, we can derive the optimal price ($P^*$) using the First Order Condition (setting the first derivative to zero).
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Revenue Maximization -->
+                <div class="bg-slate-900 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl border border-slate-800">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+                        <span class="text-8xl math-font font-black text-violet-400">R</span>
+                    </div>
+                    <h4 class="font-black text-violet-400 mb-2 text-sm uppercase tracking-wider relative z-10">Revenue Maximization</h4>
+                    <p class="text-slate-400 text-xs mb-4 relative z-10 math-font">Rev = $P \cdot (D_0 - mP)$</p>
+                    
+                    <div class="text-3xl math-font font-black text-white relative z-10 bg-slate-800/50 p-4 rounded-xl border border-slate-700 text-center mb-4">
+                        $$ P^* = \frac{D_0}{2m} $$
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed relative z-10">Calculated by setting $\frac{d(Rev)}{dP} = D_0 - 2mP = 0$.</p>
+                </div>
+
+                <!-- Profit Maximization -->
+                <div class="bg-slate-900 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl border border-slate-800">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+                        <span class="text-8xl math-font font-black text-emerald-400">$\pi$</span>
+                    </div>
+                    <h4 class="font-black text-emerald-400 mb-2 text-sm uppercase tracking-wider relative z-10">Profit Maximization</h4>
+                    <p class="text-slate-400 text-xs mb-4 relative z-10 math-font">$\pi$ = $(P - c) \cdot (D_0 - mP)$</p>
+                    
+                    <div class="text-3xl math-font font-black text-white relative z-10 bg-slate-800/50 p-4 rounded-xl border border-slate-700 text-center mb-4">
+                        $$ P^* = \frac{D_0 + mc}{2m} $$
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed relative z-10">Profit peak will <strong>always</strong> require a higher optimal price than the revenue peak.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 03: Linear Programming Standard Form -->
+        <div class="card border-t-8 border-rose-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-rose-500 shadow-md">03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">LPP Standard Form Rules</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                Before converting a Linear Programming Problem (LPP) from Primal to Dual, it <strong>must</strong> be in Standard Form. If a constraint uses the wrong inequality sign, you must multiply the entire constraint row by $-1$ to flip the sign.
+            </p>
+
+            <div class="overflow-hidden rounded-[2rem] border border-slate-200 shadow-sm mb-6">
+                <table class="w-full text-left border-collapse bg-white">
+                    <thead>
+                        <tr>
+                            <th class="table-header w-1/3 text-slate-500">Objective</th>
+                            <th class="table-header w-1/3 text-slate-500">Required Constraint Sign</th>
+                            <th class="table-header w-1/3 text-slate-500">Fixing Equality ($=$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell font-bold text-blue-600">Maximization</td>
+                            <td class="table-cell math-font text-slate-800 text-xl">$\le$ or $<$</td>
+                            <td class="table-cell text-xs text-slate-600">Split into $\le$ and $\ge$, then multiply the $\ge$ equation by $-1$.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell font-bold text-rose-600">Minimization</td>
+                            <td class="table-cell math-font text-slate-800 text-xl">$\ge$ or $>$</td>
+                            <td class="table-cell text-xs text-slate-600">Split into $\ge$ and $\le$, then multiply the $\le$ equation by $-1$.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 04: Primal-Dual Conversion Table -->
+        <div class="card border-t-8 border-orange-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-orange-500 shadow-md">04</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Primal-Dual Conversion Algorithm</h2>
+            </div>
+
+            <p class="text-slate-600 mb-8 leading-relaxed">
+                The Dual is a mirrored perspective of the Primal problem. The conversion mechanism transposes coefficients, flips objectives, and swaps structural boundaries.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-orange-50 p-6 rounded-[2rem] border border-orange-200 flex flex-col justify-center shadow-sm">
+                    <h4 class="font-black text-orange-800 text-sm uppercase tracking-wider mb-4 text-center border-b border-orange-200 pb-2">Original Primal</h4>
+                    <ul class="space-y-4 text-sm font-medium text-orange-900">
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-orange-100 shadow-sm">
+                            <span>Objective: Maximize</span> <span class="math-font text-lg">$\rightarrow$</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-orange-100 shadow-sm">
+                            <span>Number of Constraints ($m$)</span> <span class="math-font text-lg">$\rightarrow$</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-orange-100 shadow-sm">
+                            <span>Number of Variables ($n$)</span> <span class="math-font text-lg">$\rightarrow$</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-orange-100 shadow-sm">
+                            <span>Objective Coefficients ($C_j$)</span> <span class="math-font text-lg">$\rightarrow$</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-orange-100 shadow-sm">
+                            <span>Constraint RHS Limits ($B_i$)</span> <span class="math-font text-lg">$\rightarrow$</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-emerald-50 p-6 rounded-[2rem] border border-emerald-200 flex flex-col justify-center shadow-sm">
+                    <h4 class="font-black text-emerald-800 text-sm uppercase tracking-wider mb-4 text-center border-b border-emerald-200 pb-2">Resulting Dual</h4>
+                    <ul class="space-y-4 text-sm font-medium text-emerald-900">
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="math-font text-lg">$\rightarrow$</span> <span>Objective: Minimization</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="math-font text-lg">$\rightarrow$</span> <span>Number of Dual Variables ($Y_m$)</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="math-font text-lg">$\rightarrow$</span> <span>Number of Dual Constraints</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="math-font text-lg">$\rightarrow$</span> <span>Dual Constraint RHS Limits</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="math-font text-lg">$\rightarrow$</span> <span>Dual Objective Coefficients</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 05: Binding Constraints -->
+        <div class="card border-t-8 border-emerald-500 mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-emerald-500 shadow-md">05</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Binding vs. Non-Binding Constraints</h2>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8">
+                <p class="text-slate-600 leading-relaxed text-lg max-w-2xl">
+                    Once optimal decision variables ($X^*$) are found, plugging them back into the original constraints reveals whether a resource was completely exhausted (Binding) or if there is leftover slack (Non-Binding).
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Binding -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-rose-200 shadow-sm relative">
+                    <div class="absolute top-4 right-4 bg-rose-100 text-rose-700 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded">Crucial Limit</div>
+                    <h4 class="font-black text-slate-800 text-lg mb-2">Binding Constraint</h4>
+                    <p class="text-slate-600 text-sm mb-4">When optimal values are substituted, the Left Hand Side perfectly equals the Right Hand Side ($LHS = RHS$). The resource is fully consumed.</p>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-500 font-bold uppercase">Dual Variable Implication:</p>
+                        <p class="text-sm font-black text-rose-600 mt-1">Non-Zero (Strictly > 0)</p>
+                    </div>
+                </div>
+
+                <!-- Non-Binding -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm relative">
+                    <div class="absolute top-4 right-4 bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded">Slack Exists</div>
+                    <h4 class="font-black text-slate-800 text-lg mb-2">Non-Binding Constraint</h4>
+                    <p class="text-slate-600 text-sm mb-4">When optimal values are substituted, an inequality remains ($LHS \neq RHS$). There is slack or surplus resource available.</p>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-500 font-bold uppercase">Dual Variable Implication:</p>
+                        <p class="text-sm font-black text-slate-400 mt-1">Might be Zero</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center pb-12 opacity-20 text-[10px] font-black uppercase tracking-[0.8em] text-slate-800">
+            Synthesized Statistical Notes • Optimization
+        </div>
+
+    </div>
+
+</body>
+</html>
