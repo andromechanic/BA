@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Guide: Logistic Regression (Theory)</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --primary: #2563eb;
+            --secondary: #14b8a6;
+            --accent: #f59e0b;
+            --violet: #7c3aed;
+            --rose: #e11d48;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .math-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 14px 30px -20px rgba(15,23,42,0.25);
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 3rem;
+            }
+        }
+
+        .table-header {
+            background: #f8fafc;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-cell {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .badge {
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-16">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- HEADER BLOCK -->
+        <div class="text-center mb-20 mt-8">
+            <span class="badge bg-blue-100 text-blue-700 inline-block mb-6">Week 7 • Business Analytics</span>
+            <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter title-gradient mb-6 leading-tight">Logistic Regression<br>& Classification</h1>
+            <p class="text-xl text-slate-400 font-light tracking-wide italic max-w-2xl mx-auto">Transitioning from continuous predictions to categorical outcomes using Odds, Logits, and Confusion Matrices.</p>
+        </div>
+
+        <!-- SECTION 01: The Probability Problem -->
+        <div class="card border-t-8 border-blue-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-blue-500 shadow-md">01</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">The Classification Paradigm</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                Unlike regression, which predicts a continuous numerical value, <strong class="underline decoration-blue-500 decoration-[3px] text-slate-800">Classification</strong> predicts a categorical variable (e.g., Success/Failure, True/False, 1/0). This is a <em>Supervised Learning</em> task because building the model requires both the input features ($X$) and the true historical labels ($Y$).
+            </p>
+
+            <div class="bg-rose-50 p-8 rounded-[2rem] border border-rose-100 shadow-sm mb-6">
+                <h4 class="font-black text-rose-800 mb-3 uppercase tracking-widest text-xs flex items-center gap-2">
+                    <span>🛑</span> Why Standard Linear Regression Fails
+                </h4>
+                <p class="text-sm text-rose-900 leading-relaxed mb-4">
+                    If we try to directly model Probability ($p$) using $Y = \beta_0 + \beta_1X_1 \dots$, we face a mathematical barrier:
+                </p>
+                <ul class="space-y-3 text-sm text-rose-800 math-font bg-white p-4 rounded-xl border border-rose-200">
+                    <li>1. <strong class="text-slate-800">Linear Output Range:</strong> $(-\infty, +\infty)$</li>
+                    <li>2. <strong class="text-slate-800">Probability Range:</strong> Strictly bounded to $[0, 1]$</li>
+                </ul>
+                <p class="text-xs text-rose-700 mt-4 italic">
+                    Restricting a linear equation to never output values below 0 or above 1 requires incredibly complex constraints. Instead, we must mathematically transform the probability into a format that spans from $-\infty$ to $+\infty$.
+                </p>
+            </div>
+        </div>
+
+        <!-- SECTION 02: Mathematical Transformation (Odds to Logit) -->
+        <div class="card border-t-8 border-violet-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-violet-500 shadow-md">02</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Mathematical Transformations</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                To bridge the gap between probability and linear equations, we use a two-step mathematical translation: transforming Probability into <strong>Odds</strong>, and then Odds into <strong>Log-Odds (Logit)</strong>.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- Odds -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+                    <h4 class="font-black text-slate-800 text-sm uppercase tracking-wider mb-2">Step 1: The Odds Ratio</h4>
+                    <p class="text-sm text-slate-600 mb-4">The ratio of the probability of success to the probability of failure.</p>
+                    <div class="math-font text-xl text-violet-600 font-bold bg-slate-50 py-3 rounded-xl border border-slate-100 text-center mb-4">
+                        $$\text{Odds} = \frac{p}{1 - p}$$
+                    </div>
+                    <p class="text-xs text-slate-500"><strong class="text-slate-800">Range:</strong> $[0, +\infty)$. <br><em>Issue:</em> It resolves the lower bound but isn't symmetric. $p=0.5$ results in Odds $= 1$, which awkwardly splits the positive and negative classes.</p>
+                </div>
+                
+                <!-- Logit -->
+                <div class="bg-violet-50 rounded-3xl p-6 border-2 border-violet-200 shadow-sm">
+                    <h4 class="font-black text-violet-900 text-sm uppercase tracking-wider mb-2">Step 2: Log-Odds (Logit)</h4>
+                    <p class="text-sm text-violet-800 mb-4">Taking the natural logarithm ($ln$) of the Odds ratio solves the symmetry and bounding issues entirely.</p>
+                    <div class="math-font text-xl text-violet-700 font-black bg-white py-3 rounded-xl border border-violet-100 text-center mb-4 shadow-sm">
+                        $$\text{Logit} = \ln\left(\frac{p}{1 - p}\right)$$
+                    </div>
+                    <p class="text-xs text-violet-800"><strong class="text-violet-900">Range:</strong> $(-\infty, +\infty)$. <br><em>Perfection:</em> Now $p=0.5$ maps exactly to $0$. Positive outputs dictate a positive class, negative outputs dictate a negative class.</p>
+                </div>
+            </div>
+
+            <!-- Sigmoid -->
+            <div class="bg-slate-900 p-8 rounded-[2rem] border border-slate-800 text-white relative overflow-hidden shadow-xl">
+                <div class="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+                    <span class="text-8xl math-font font-black text-violet-400">&int;</span>
+                </div>
+                <h4 class="font-black text-violet-400 mb-2 text-sm uppercase tracking-wider relative z-10">The Sigmoid (Logistic) Function</h4>
+                <p class="text-slate-300 text-sm mb-6 relative z-10">Because we modeled the <em>Logit</em> using the linear equation ($z = \beta_0 + \beta_1X_1 \dots$), we must mathematically invert it to extract the final predicted Probability ($p$).</p>
+                
+                <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 relative z-10 math-font text-center text-2xl font-bold shadow-inner">
+                    $$p = \frac{1}{1 + e^{-z}}$$
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 03: Objective & Thresholds -->
+        <div class="card border-t-8 border-rose-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-rose-500 shadow-md">03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Objective Function & Thresholding</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-rose-50 rounded-[2rem] p-8 border border-rose-100 shadow-sm">
+                    <h4 class="font-black text-rose-900 uppercase tracking-widest text-xs mb-3">Model Objective</h4>
+                    <p class="text-sm text-rose-800 leading-relaxed">
+                        In Linear Regression, the objective is to <em>Minimize the Sum of Squared Errors (SSE)</em>. <br><br>
+                        In Logistic Regression, the objective completely changes. The model solver seeks to <strong class="bg-white px-2 py-1 rounded border border-rose-200 inline-block mt-2">Maximize the Log-Likelihood</strong> of the odds.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-[2rem] p-8 border-2 border-slate-200 shadow-sm">
+                    <h4 class="font-black text-slate-800 uppercase tracking-widest text-xs mb-3">Classification Thresholds</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        The Sigmoid function outputs a probability (e.g., $p = 0.7$). To finalize the classification, we compare it to a pre-decided <strong>Threshold</strong> (default is often $0.5$, but could be set to $0.8$ based on risk appetite).
+                    </p>
+                    <ul class="mt-4 space-y-2 text-sm font-bold">
+                        <li class="bg-emerald-50 text-emerald-800 p-2 rounded">If $p \ge \text{Threshold} \implies \text{Positive Class (1)}$</li>
+                        <li class="bg-slate-100 text-slate-600 p-2 rounded">If $p < \text{Threshold} \implies \text{Negative Class (0)}$</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 04: The Confusion Matrix -->
+        <div class="card border-t-8 border-orange-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-orange-500 shadow-md">04</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">The Confusion Matrix Layout</h2>
+            </div>
+
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                To evaluate the model, we tally the predictions against the true historical data into a 2x2 grid. <em>Crucial Assumption:</em> In this course's standard layout, <strong>Actuals are on the Left (Rows)</strong> and <strong>Predicteds are on the Top (Columns)</strong>.
+            </p>
+
+            <div class="overflow-hidden rounded-[2rem] border-2 border-slate-800 shadow-xl mb-6 bg-slate-900 text-white">
+                <table class="w-full text-center border-collapse table-fixed">
+                    <thead>
+                        <tr>
+                            <th class="w-1/4 border-b border-r border-slate-700 p-4"></th>
+                            <th colspan="2" class="w-1/2 border-b border-slate-700 p-4 font-black uppercase tracking-widest text-orange-400 bg-slate-800/50">Predicted Class (Model)</th>
+                        </tr>
+                        <tr>
+                            <th class="border-b border-r border-slate-700 p-4 bg-slate-800/50"></th>
+                            <th class="border-b border-r border-slate-700 p-4 font-bold text-emerald-300">Positive (+)</th>
+                            <th class="border-b border-slate-700 p-4 font-bold text-rose-300">Negative (-)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" class="border-r border-slate-700 p-4 font-black uppercase tracking-widest text-blue-400 bg-slate-800/50 align-middle transform -rotate-180" style="writing-mode: vertical-rl;">Actual Class (Truth)</td>
+                            <td class="border-b border-r border-slate-700 p-6 relative group hover:bg-slate-800 transition-colors">
+                                <span class="absolute top-2 left-2 text-[10px] uppercase font-bold text-slate-500">Actual +, Predicted +</span>
+                                <div class="text-2xl font-black text-emerald-400 math-font">TP</div>
+                                <p class="text-xs text-slate-400 mt-1">True Positive</p>
+                            </td>
+                            <td class="border-b border-slate-700 p-6 relative group hover:bg-slate-800 transition-colors">
+                                <span class="absolute top-2 left-2 text-[10px] uppercase font-bold text-slate-500">Actual +, Predicted -</span>
+                                <div class="text-2xl font-black text-rose-400 math-font">FN</div>
+                                <p class="text-xs text-slate-400 mt-1">False Negative</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-r border-slate-700 p-6 relative group hover:bg-slate-800 transition-colors">
+                                <span class="absolute top-2 left-2 text-[10px] uppercase font-bold text-slate-500">Actual -, Predicted +</span>
+                                <div class="text-2xl font-black text-rose-400 math-font">FP</div>
+                                <p class="text-xs text-slate-400 mt-1">False Positive</p>
+                            </td>
+                            <td class="p-6 relative group hover:bg-slate-800 transition-colors">
+                                <span class="absolute top-2 left-2 text-[10px] uppercase font-bold text-slate-500">Actual -, Predicted -</span>
+                                <div class="text-2xl font-black text-emerald-400 math-font">TN</div>
+                                <p class="text-xs text-slate-400 mt-1">True Negative</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <p class="text-sm text-slate-500 italic text-center">
+                Always ensure the grid orientation before applying summation tricks. The "True" values always lie on the main diagonal.
+            </p>
+        </div>
+
+        <!-- SECTION 05: Evaluation Metrics & Tricks -->
+        <div class="card border-t-8 border-emerald-500 mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-emerald-500 shadow-md">05</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Metrics & The Row/Column Tricks</h2>
+            </div>
+            
+            <div class="space-y-8">
+                <!-- Accuracy -->
+                <div class="bg-white p-6 rounded-3xl border-2 border-slate-100 flex gap-6 items-center shadow-sm">
+                    <div class="w-1/3 text-center border-r border-slate-100 pr-6">
+                        <h4 class="font-black text-slate-800 uppercase tracking-widest text-sm mb-2">Accuracy</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">Percentage of entirely correct predictions out of all samples processed.</p>
+                    </div>
+                    <div class="w-2/3 math-font text-lg text-slate-800 font-bold">
+                        $$\text{Accuracy} = \frac{TP + TN}{\text{Total Samples}}$$
+                    </div>
+                </div>
+
+                <!-- Precision -->
+                <div class="bg-blue-50 p-6 rounded-3xl border-2 border-blue-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-4 right-4 bg-white text-blue-700 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm border border-blue-200">The "Column" Trick</div>
+                    <h4 class="font-black text-blue-900 uppercase tracking-widest text-sm mb-2">Precision</h4>
+                    <p class="text-sm text-blue-800 mb-6">"Out of all the samples my model <em>predicted</em> as a specific class, how many were actually correct?" <br><strong>Memory Trick:</strong> Use the <strong>COLUMN sum</strong>. The second letter in the denominator matches the class.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-50 text-center">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-2">Precision (+ Class)</p>
+                            <div class="math-font text-blue-700 font-black">
+                                $$\frac{TP}{TP + F\textbf{P}}$$
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-50 text-center">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-2">Precision (- Class)</p>
+                            <div class="math-font text-blue-700 font-black">
+                                $$\frac{TN}{TN + F\textbf{N}}$$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recall -->
+                <div class="bg-emerald-50 p-6 rounded-3xl border-2 border-emerald-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-4 right-4 bg-white text-emerald-700 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm border border-emerald-200">The "Row" Trick</div>
+                    <h4 class="font-black text-emerald-900 uppercase tracking-widest text-sm mb-2">Recall</h4>
+                    <p class="text-sm text-emerald-800 mb-6">"Out of all the samples that <em>actually belonged</em> to a class, how many did the model successfully find?" <br><strong>Memory Trick:</strong> <strong>R</strong>ecall = <strong>R</strong>ow sum. The second letter in the denominator is opposite of the class.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-emerald-50 text-center">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-2">Recall (+ Class)</p>
+                            <div class="math-font text-emerald-700 font-black">
+                                $$\frac{TP}{TP + F\textbf{N}}$$
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-emerald-50 text-center">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-2">Recall (- Class)</p>
+                            <div class="math-font text-emerald-700 font-black">
+                                $$\frac{TN}{TN + F\textbf{P}}$$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center pb-12 opacity-20 text-[10px] font-black uppercase tracking-[0.8em] text-slate-800">
+            Synthesized Statistical Notes • Logistic Regression
+        </div>
+
+    </div>
+
+</body>
+</html>
