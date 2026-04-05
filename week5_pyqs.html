@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Guide: Optimization & LPP (PYQs)</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --primary: #2563eb;
+            --secondary: #14b8a6;
+            --accent: #f59e0b;
+            --violet: #7c3aed;
+            --rose: #e11d48;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .math-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 14px 30px -20px rgba(15,23,42,0.25);
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 3rem;
+            }
+        }
+
+        .table-header {
+            background: #f8fafc;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-cell {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .badge {
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-16">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- HEADER BLOCK -->
+        <div class="text-center mb-20 mt-8">
+            <span class="badge bg-orange-100 text-orange-700 inline-block mb-6">Week 5 • Problem Solving (PYQs)</span>
+            <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter title-gradient mb-6 leading-tight">Optimization &<br>Linear Programming</h1>
+            <p class="text-xl text-slate-400 font-light tracking-wide italic max-w-2xl mx-auto">Solving applied LPP formulations, non-linear calculus traps, and primal-dual binding analyses.</p>
+        </div>
+
+        <!-- SECTION 01: Mathematical Translation -->
+        <div class="card border-t-8 border-blue-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-blue-500 shadow-md">01</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Mathematical Translation (LPP)</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                Before solving, you must correctly map business restrictions into mathematical constraints. Your <strong class="underline decoration-blue-500 decoration-[3px] text-slate-800">Decision Variables</strong> are the explicit levers you control (e.g., how much to invest in $X_1, X_2...$).
+            </p>
+
+            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-inner mb-6">
+                <h4 class="font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">The Investment Portfolio Scenario</h4>
+                <ul class="space-y-4 text-sm text-slate-700">
+                    <li class="flex items-start gap-3">
+                        <span class="font-black text-blue-500 mt-1">Q:</span>
+                        <span>"Bongu Oil ($X_2$) cannot be more than 60% of the total Oil Industry investment ($X_1 + X_2$)."</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-100">
+                        <span class="font-black text-emerald-500 mt-1">A:</span>
+                        <span class="math-font text-base">$X_2 \le 0.60 \cdot (X_1 + X_2)$</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECTION 02: Standard Form & Equality Rules -->
+        <div class="card border-t-8 border-rose-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-rose-500 shadow-md">02</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Standard Form & Equality Rules</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                In a standard <strong>Maximization</strong> Primal problem, all constraints <em>must</em> be $\le$. Strict equalities (e.g., "Must invest exactly ₹1,00,000") break this rule and must be fractured into two valid inequalities.
+            </p>
+
+            <div class="bg-rose-50 rounded-[2rem] p-8 border border-rose-100 relative overflow-hidden">
+                <div class="absolute top-4 right-4 bg-white text-rose-600 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded shadow-sm border border-rose-200">Constraint Splitting</div>
+                
+                <h4 class="font-black text-rose-800 text-sm uppercase tracking-wider mb-2">Original Equality</h4>
+                <div class="text-2xl math-font font-black text-rose-600 bg-white p-3 rounded-xl border border-rose-100 inline-block mb-6 shadow-sm">
+                    $$ \sum X_i = 100,000 $$
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-rose-100">
+                        <p class="text-xs text-slate-400 font-bold uppercase mb-1">Part 1 (Naturally Valid)</p>
+                        <p class="math-font text-lg text-slate-800 font-bold">$\sum X_i \le 100,000$</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-rose-100">
+                        <p class="text-xs text-slate-400 font-bold uppercase mb-1">Part 2 (Sign Flipped)</p>
+                        <p class="math-font text-lg text-slate-800 font-bold">$-\sum X_i \le -100,000$</p>
+                        <p class="text-[10px] text-slate-500 mt-2 leading-tight">Originally $\ge$, multiplied by $-1$ to force the valid $\le$ format.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 03: Non-Linear Calculus -->
+        <div class="card border-t-8 border-violet-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-violet-500 shadow-md">03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Non-Linear Calculus (The Formula Trap)</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                If the demand curve is <strong>not</strong> linear, you <strong>cannot</strong> blindly use the formulas $P^* = D_0/2m$ or $(D_0+mc)/2m$. You must revert to fundamental calculus derivatives (First Order Conditions).
+            </p>
+
+            <div class="bg-slate-900 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl border border-slate-800">
+                <div class="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+                    <span class="text-8xl math-font font-black text-violet-400">$\frac{d}{dP}$</span>
+                </div>
+                
+                <h4 class="font-black text-violet-400 mb-2 text-sm uppercase tracking-wider">Given Problem</h4>
+                <p class="text-slate-300 text-sm mb-6 math-font">Demand: $D(P) = 1444 - 3P^2$ <br> Cost: $c = 50$</p>
+                
+                <div class="space-y-6 relative z-10">
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <p class="text-blue-400 font-bold text-sm uppercase tracking-widest mb-1">1. Revenue Maximization</p>
+                        <p class="text-sm text-slate-400 math-font">$Rev = P \cdot (1444 - 3P^2) = 1444P - 3P^3$</p>
+                        <p class="text-sm text-slate-400 math-font mt-2">Set $Rev' = 0 \implies 1444 - 9P^2 = 0$</p>
+                        <p class="text-lg text-white font-bold math-font mt-1">$P^* = 12.67$</p>
+                    </div>
+
+                    <div class="border-l-4 border-emerald-500 pl-4">
+                        <p class="text-emerald-400 font-bold text-sm uppercase tracking-widest mb-1">2. Profit Maximization</p>
+                        <p class="text-sm text-slate-400 math-font">$\pi = (P - 50) \cdot (1444 - 3P^2)$</p>
+                        <p class="text-sm text-slate-400 math-font mt-2">Set $\pi' = 0 \implies \text{Quadratic Equation}$</p>
+                        <p class="text-lg text-white font-bold math-font mt-1">$P^* = 37.60$</p>
+                        <div class="bg-rose-500/20 text-rose-300 px-3 py-2 rounded mt-2 text-xs border border-rose-500/30 inline-block">
+                            <strong>⚠️ Business Trap:</strong> While mathematically valid, $P=37.60$ forces $D(P)$ to become negative. In reality, demand cannot be negative!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 04: Primal-Dual Dimensionality -->
+        <div class="card border-t-8 border-orange-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-orange-500 shadow-md">04</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Primal-Dual Dimensionality</h2>
+            </div>
+
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                When converting models, the dimensions cross-pollinate. The number of constraints in the Primal directly determines the number of variables you must solve for in the Dual (and vice versa).
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-orange-50 p-6 rounded-[2rem] border border-orange-200 text-center shadow-sm">
+                    <h4 class="font-black text-orange-800 text-sm uppercase tracking-wider mb-2">Primal Problem</h4>
+                    <p class="math-font text-2xl text-slate-800 font-bold">3</p>
+                    <p class="text-xs text-orange-700 uppercase font-bold tracking-widest mb-4">Decision Variables</p>
+                    <div class="w-full h-px bg-orange-200 my-4"></div>
+                    <p class="math-font text-2xl text-slate-800 font-bold">4</p>
+                    <p class="text-xs text-orange-700 uppercase font-bold tracking-widest">Constraints <br><span class="text-[9px] opacity-70">(Excl. non-negativity)</span></p>
+                </div>
+
+                <div class="bg-emerald-50 p-6 rounded-[2rem] border border-emerald-200 text-center shadow-sm relative">
+                    <div class="absolute top-1/2 -left-4 w-8 h-8 bg-white border border-slate-200 rounded-full flex items-center justify-center transform -translate-y-1/2 z-10 hidden md:flex">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                    </div>
+                    <h4 class="font-black text-emerald-800 text-sm uppercase tracking-wider mb-2">Dual Problem</h4>
+                    <p class="math-font text-2xl text-slate-800 font-bold">4</p>
+                    <p class="text-xs text-emerald-700 uppercase font-bold tracking-widest mb-4">Decision Variables</p>
+                    <div class="w-full h-px bg-emerald-200 my-4"></div>
+                    <p class="math-font text-2xl text-slate-800 font-bold">3</p>
+                    <p class="text-xs text-emerald-700 uppercase font-bold tracking-widest">Constraints</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 05: Evaluating Binding Constraints -->
+        <div class="card border-t-8 border-emerald-500 mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-emerald-500 shadow-md">05</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Evaluating Binding Constraints</h2>
+            </div>
+            
+            <p class="text-slate-600 leading-relaxed text-lg mb-8">
+                To determine which Dual Decision Variables equal zero, you must test the Primal optimal solution ($X^*$) against the original Primal constraints.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Binding -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-rose-200 shadow-sm relative">
+                    <div class="absolute top-4 right-4 bg-rose-100 text-rose-700 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded">No Slack Left</div>
+                    <h4 class="font-black text-slate-800 text-lg mb-4 border-b border-slate-100 pb-2">Binding Constraint</h4>
+                    <div class="math-font text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4">
+                        <p class="text-slate-500 mb-1">Test: $13(X_1) + 26(X_2) \le 1000$</p>
+                        <p class="text-slate-800 font-bold">Result: $1000 \le 1000$</p>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-4">The Left Hand Side perfectly equals the Right Hand Side ($LHS = RHS$). The resource limit is fully reached.</p>
+                    <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
+                        <p class="text-xs text-rose-800 font-bold uppercase">Dual Variable Property:</p>
+                        <p class="text-lg font-black text-rose-600 mt-1">Non-Zero Value</p>
+                    </div>
+                </div>
+
+                <!-- Non-Binding -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm relative">
+                    <div class="absolute top-4 right-4 bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded">Slack Exists</div>
+                    <h4 class="font-black text-slate-800 text-lg mb-4 border-b border-slate-100 pb-2">Non-Binding Constraint</h4>
+                    <div class="math-font text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4">
+                        <p class="text-slate-500 mb-1">Test: $45(X_1) + 10(X_2) \le 5000$</p>
+                        <p class="text-slate-800 font-bold">Result: $3800 \le 5000$</p>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-4">An inequality remains ($LHS \neq RHS$). You have not used up the maximum allowance for this specific constraint.</p>
+                    <div class="bg-slate-100 p-3 rounded-xl border border-slate-200">
+                        <p class="text-xs text-slate-600 font-bold uppercase">Dual Variable Property:</p>
+                        <p class="text-lg font-black text-slate-500 mt-1">Strictly Zero</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center pb-12 opacity-20 text-[10px] font-black uppercase tracking-[0.8em] text-slate-800">
+            Synthesized Statistical Notes • Optimization
+        </div>
+
+    </div>
+
+</body>
+</html>
