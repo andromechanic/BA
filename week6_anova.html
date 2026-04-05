@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Guide: Multiple Linear Regression (ANOVA Output)</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --primary: #2563eb;
+            --secondary: #14b8a6;
+            --accent: #f59e0b;
+            --violet: #7c3aed;
+            --rose: #e11d48;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .math-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 14px 30px -20px rgba(15,23,42,0.25);
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 3rem;
+            }
+        }
+
+        .table-header {
+            background: #f8fafc;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-cell {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .badge {
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-16">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- HEADER BLOCK -->
+        <div class="text-center mb-20 mt-8">
+            <span class="badge bg-blue-100 text-blue-700 inline-block mb-6">Week 6 • Business Analytics</span>
+            <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter title-gradient mb-6 leading-tight">MLR: ANOVA Table<br>Analysis</h1>
+            <p class="text-xl text-slate-400 font-light tracking-wide italic max-w-2xl mx-auto">Deconstructing Excel's regression output: tracking statistics, degrees of freedom, hypothesis testing, and coefficient intervals.</p>
+        </div>
+
+        <!-- SECTION 01: Regression Statistics -->
+        <div class="card border-t-8 border-blue-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-blue-500 shadow-md">01</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Summary Regression Statistics</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                The first block of any standard MLR output summarizes the model's overall explanatory power and general error margins.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-2">Multiple R</h4>
+                    <p class="text-sm text-slate-600">The explicit correlation coefficient between the actual $Y$ values and the model's predicted $\hat{Y}$ values.</p>
+                </div>
+                <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-2">R Square ($R^2$)</h4>
+                    <p class="text-sm text-slate-600">Coefficient of Determination. Indicates the exact percentage of total variation in $Y$ that can be explained by the $X$ variables.</p>
+                </div>
+                <div class="bg-blue-50 rounded-3xl p-6 border border-blue-200">
+                    <h4 class="font-bold text-blue-900 mb-2">Standard Error ($SE$)</h4>
+                    <p class="text-sm text-blue-800 mb-2">The Root Mean Square Error (RMSE). It shows, on average, how far off the predictions are from the actual values.</p>
+                    <p class="text-xs math-font font-bold text-blue-600 bg-white inline-block px-2 py-1 rounded">$SE = \sqrt{MS_{Residual}}$</p>
+                </div>
+                <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-2">Observations ($n$)</h4>
+                    <p class="text-sm text-slate-600">The total sample size (number of data points/rows) used to train the regression model.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 02: ANOVA Table Anatomy -->
+        <div class="card border-t-8 border-violet-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-violet-500 shadow-md">02</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">ANOVA Table Anatomy</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                Analysis of Variance (ANOVA) explicitly partitions the total variation into "Explained" (Regression) and "Unexplained" (Residual) segments to calculate the test statistics. Let $k$ equal the number of independent variables.
+            </p>
+
+            <div class="overflow-hidden rounded-[1.5rem] border border-slate-200 shadow-sm">
+                <table class="w-full text-left border-collapse bg-white">
+                    <thead>
+                        <tr>
+                            <th class="table-header w-1/5 text-slate-500">Source</th>
+                            <th class="table-header w-1/5 text-slate-500">df <br><span class="lowercase tracking-normal font-normal opacity-70">(Degrees of Freedom)</span></th>
+                            <th class="table-header w-1/5 text-slate-500">SS <br><span class="lowercase tracking-normal font-normal opacity-70">(Sum of Squares)</span></th>
+                            <th class="table-header w-1/5 text-slate-500">MS <br><span class="lowercase tracking-normal font-normal opacity-70">(Mean Square)</span></th>
+                            <th class="table-header w-1/5 text-slate-500">F-Stat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell font-bold text-slate-700">Regression</td>
+                            <td class="table-cell math-font text-sm">$k$</td>
+                            <td class="table-cell math-font text-sm">$SS_{Reg}$</td>
+                            <td class="table-cell math-font text-sm bg-violet-50">$\frac{SS_{Reg}}{k}$</td>
+                            <td class="table-cell math-font text-sm bg-emerald-50 text-emerald-700 font-bold" rowspan="2 align-middle">$\frac{MS_{Reg}}{MS_{Res}}$</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="table-cell font-bold text-slate-700">Residual (Error)</td>
+                            <td class="table-cell math-font text-sm">$n - k - 1$</td>
+                            <td class="table-cell math-font text-sm">$SS_{Res}$</td>
+                            <td class="table-cell math-font text-sm bg-rose-50">$\frac{SS_{Res}}{n - k - 1}$</td>
+                        </tr>
+                        <tr class="bg-slate-900">
+                            <td class="table-cell font-black text-white">Total</td>
+                            <td class="table-cell font-black text-white math-font text-sm border-t border-slate-700">$n - 1$</td>
+                            <td class="table-cell math-font text-sm text-white border-t border-slate-700">$SS_{Tot}$</td>
+                            <td class="table-cell border-t border-slate-700"></td>
+                            <td class="table-cell border-t border-slate-700"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 03: Overall Model Significance -->
+        <div class="card border-t-8 border-rose-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-rose-500 shadow-md">03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Overall Model Significance (F-Test)</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed">
+                The ANOVA table's primary purpose is to test if the <strong>entire model</strong> is statistically valid. It generates the <em>Significance F</em> (p-value) derived from the F-Statistic.
+            </p>
+
+            <div class="bg-rose-50 rounded-3xl p-8 border border-rose-100 shadow-inner mb-6 relative">
+                <div class="grid md:grid-cols-2 gap-6 relative z-10">
+                    <div>
+                        <h4 class="font-black text-rose-800 uppercase tracking-widest text-xs mb-2">Null Hypothesis ($H_0$)</h4>
+                        <p class="text-sm text-rose-900 leading-relaxed">The model is <strong>NOT</strong> significant. All slope coefficients are exactly zero.<br><span class="math-font font-bold mt-2 block bg-white px-2 py-1 rounded inline-block border border-rose-100">$\beta_1 = \beta_2 = \dots = \beta_k = 0$</span></p>
+                    </div>
+                    <div>
+                        <h4 class="font-black text-emerald-800 uppercase tracking-widest text-xs mb-2">Alternate Hypothesis ($H_1$)</h4>
+                        <p class="text-sm text-emerald-900 leading-relaxed">The model <strong>IS</strong> significant. At least one slope coefficient is distinct from zero and offers predictive power.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center">
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">The Rejection Rule</p>
+                <p class="text-white text-sm">If <strong class="text-rose-400">Significance F (p-value) < $\alpha$</strong> (typically 0.05), we <strong class="text-emerald-400">reject $H_0$</strong> and conclude the model is valid.</p>
+            </div>
+        </div>
+
+        <!-- SECTION 04: Individual Coefficient Significance -->
+        <div class="card border-t-8 border-orange-500">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-orange-500 shadow-md">04</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Individual Predictor Significance (t-Test)</h2>
+            </div>
+
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                Even if the overall model is valid, individual variables might be useless. The <strong>Coefficients Table</strong> runs an independent t-test for the intercept and <em>every single</em> $X_i$ variable. The Null Hypothesis for each row is that its specific $\beta_i = 0$.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-orange-50 p-6 rounded-[2rem] border border-orange-200 shadow-sm flex flex-col justify-center">
+                    <p class="text-xs text-orange-700 uppercase font-bold tracking-widest mb-1">Estimate (Coefficient)</p>
+                    <p class="text-sm text-slate-700">The calculated $\beta$ value that will be plugged directly into the $Y = \dots$ equation.</p>
+                </div>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-widest mb-1">Standard Error</p>
+                    <p class="text-sm text-slate-700">The uncertainty or margin of error strictly concerning this specific coefficient estimate.</p>
+                </div>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-widest mb-2">t-Statistic</p>
+                    <div class="math-font text-lg text-slate-800 font-bold bg-slate-50 py-2 rounded text-center">
+                        $\frac{\text{Estimate}}{\text{Std Error}}$
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-orange-500 pl-4">
+                <p class="text-sm text-slate-600">If the <strong>P-value</strong> in a variable's row is $> 0.05$, we fail to reject $H_0$. That variable does not add statistically significant predictive power alongside the others, and it should generally be removed from the model.</p>
+            </div>
+        </div>
+
+        <!-- SECTION 05: Confidence Intervals -->
+        <div class="card border-t-8 border-emerald-500 mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-emerald-500 shadow-md">05</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-800">Confidence Intervals & Model Building</h2>
+            </div>
+            
+            <p class="text-slate-600 leading-relaxed text-lg mb-6">
+                The final columns of the output establish the <strong>Lower 95%</strong> and <strong>Upper 95%</strong> boundaries for the true coefficient value. This provides a visual alternative to the p-value.
+            </p>
+
+            <div class="bg-emerald-50 rounded-[2rem] p-8 border border-emerald-100 shadow-sm mb-8">
+                <h4 class="font-black text-emerald-900 uppercase tracking-widest text-xs mb-4">The Zero-Crossing Rule</h4>
+                <p class="text-sm text-emerald-800 leading-relaxed mb-4">
+                    If the 95% interval for a variable spans from a negative number to a positive number (e.g., <span class="math-font font-bold">Lower: -0.011</span> to <span class="math-font font-bold">Upper: +0.011</span>), it means $0$ is a highly probable true value for that coefficient.
+                </p>
+                <div class="bg-white p-4 rounded-xl border border-emerald-200 inline-block">
+                    <p class="text-sm font-bold text-slate-800">Crossing zero is mathematically identical to having a P-value $> 0.05$. The variable is insignificant.</p>
+                </div>
+            </div>
+
+            <div class="border-t-2 border-dashed border-slate-200 pt-8">
+                <h4 class="font-bold text-slate-800 mb-4">Extracting the Final Equation</h4>
+                <p class="text-sm text-slate-600 mb-4">Once you drop the insignificant variables (those with high p-values or zero-crossing intervals), you build your predictive equation using the remaining "Estimates":</p>
+                <div class="bg-slate-900 text-white p-6 rounded-2xl math-font text-center text-xl shadow-lg border border-slate-800">
+                    $Y_{pred} = (\text{Intercept Estimate}) + (\text{Estimate}_1 \cdot X_1) + (\text{Estimate}_2 \cdot X_2)$
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center pb-12 opacity-20 text-[10px] font-black uppercase tracking-[0.8em] text-slate-800">
+            Synthesized Statistical Notes • ANOVA Analysis
+        </div>
+
+    </div>
+
+</body>
+</html>
