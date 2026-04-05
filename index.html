@@ -34,15 +34,14 @@
         .glass-card {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 2rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glass-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
-            border-color: var(--primary);
         }
 
         .title-gradient {
@@ -65,7 +64,7 @@
 
     <div class="max-w-6xl mx-auto">
         <!-- Hero Section -->
-        <header class="text-center mb-16 pt-8">
+        <header class="text-center mb-10 pt-8">
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
                 <span class="relative flex h-2 w-2">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -77,93 +76,183 @@
                 Study Hub.
             </h1>
             <p class="text-slate-400 text-lg md:text-xl font-light italic">
-                Business Analytics.
+                A centralized repository for Business Analytics.
             </p>
         </header>
 
-        <!-- Search / Filter (Visual Only) -->
-        <div class="mb-12 flex justify-center">
-            <div class="w-full max-w-md relative">
-                <input type="text" placeholder="Search modules..." class="w-full px-6 py-4 rounded-full border border-slate-200 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all">
-                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <!-- Acknowledgment Banner -->
+        <div class="mb-16 bg-slate-900 rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-slate-800 relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary rounded-full mix-blend-screen filter blur-[80px] opacity-30"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-secondary rounded-full mix-blend-screen filter blur-[80px] opacity-20"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+                <div class="w-20 h-20 shrink-0 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full flex items-center justify-center text-4xl shadow-lg border-4 border-slate-800">
+                    🎓
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-black text-white tracking-tight mb-2">Special Thanks to Utkarsh Sahu</h3>
+                    <p class="text-slate-300 leading-relaxed mb-6 text-sm md:text-base">
+                        These study notes were made and structured using the exceptional educational content from Utkarsh Sahu's YouTube series. <strong>It is highly recommended that everyone watches the full video playlist before using these notes</strong> to ensure a deep and effective understanding of the core concepts.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                        <a href="https://youtube.com/playlist?list=PLLf4MCSj7_7W9iSjKNwpF4l-zd1v_eONc&si=su-lmfRtjR_uyeg2" target="_blank" class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white"/></svg>
+                            Watch the Playlist
+                        </a>
+                        <a href="https://utkarsh4tech.github.io/BSMS2002/pages/extra_resources.html" target="_blank" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors border border-slate-600 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            Utkarsh's Extra Resources
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Modules Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             <!-- Week 4 Module (Theory) -->
-            <a href="week4.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-blue-500">
+            <a href="week4.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-blue-500 hover:border-blue-500">
                 <div>
                     <div class="flex justify-between items-start mb-6">
-                        <span class="text-xs font-black text-blue-500 uppercase tracking-widest">Module 04</span>
-                        <span class="status-badge bg-emerald-100 text-emerald-700">Completed</span>
+                        <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Week 04</span>
+                        <span class="status-badge bg-blue-50 text-blue-700">Theory</span>
                     </div>
-                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">Demand Response (Theory)</h3>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">Demand Response</h3>
                     <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
                         Price elasticity, Law of Demand, and Log-Log transformations for non-linear modeling.
                     </p>
                 </div>
                 <div class="flex items-center gap-2 text-blue-600 font-bold text-sm">
-                    View Guide 
-                    <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    View Guide <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </div>
             </a>
 
             <!-- Week 4 Module (PYQs) -->
-            <a href="week4_pyqs.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-fuchsia-500">
+            <a href="week4_pyqs.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-indigo-500 hover:border-indigo-500 bg-indigo-50/30">
                 <div>
                     <div class="flex justify-between items-start mb-6">
-                        <span class="text-xs font-black text-fuchsia-500 uppercase tracking-widest">Module 04 Practice</span>
-                        <span class="status-badge bg-fuchsia-100 text-fuchsia-700 flex items-center gap-1">
-                            <span>✨</span> Interactive
-                        </span>
+                        <span class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Week 04</span>
+                        <span class="status-badge bg-indigo-100 text-indigo-700">PYQs</span>
                     </div>
-                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-fuchsia-600 transition-colors">Applied Analytics (PYQs)</h3>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-indigo-600 transition-colors">Demand Response (PYQs)</h3>
                     <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
-                        Solving previous year questions on elasticity and regression ANOVA, featuring AI-generated practice.
+                        Solving previous year questions on elasticity and regressions.
                     </p>
                 </div>
-                <div class="flex items-center gap-2 text-fuchsia-600 font-bold text-sm">
-                    View Practice 
-                    <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <div class="flex items-center gap-2 text-indigo-600 font-bold text-sm">
+                    View Practice <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </div>
             </a>
 
-            <!-- Placeholder Week 5 -->
-            <div class="glass-card p-8 opacity-60 grayscale border-t-8 border-t-slate-300">
-                <div class="flex justify-between items-start mb-6">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Module 05</span>
-                    <span class="status-badge bg-slate-100 text-slate-500">Upcoming</span>
+            <!-- Week 5 Module (Theory) -->
+            <a href="week5.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-orange-500 hover:border-orange-500">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] font-black text-orange-500 uppercase tracking-widest">Week 05</span>
+                        <span class="status-badge bg-orange-50 text-orange-700">Theory</span>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-orange-600 transition-colors">Optimization & LPP</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
+                        Revenue/Profit calculus, linear programming formulation, and primal-dual conversions.
+                    </p>
                 </div>
-                <h3 class="text-2xl font-extrabold text-slate-400 mb-3">Multiple Linear Regression</h3>
-                <p class="text-slate-400 text-sm leading-relaxed mb-6 italic">
-                    Handling multi-variable inputs, multicollinearity, and model evaluation metrics.
-                </p>
-                <div class="text-slate-300 font-bold text-sm">Coming Soon...</div>
-            </div>
+                <div class="flex items-center gap-2 text-orange-600 font-bold text-sm">
+                    View Guide <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+            </a>
 
-            <!-- Placeholder Week 6 -->
-            <div class="glass-card p-8 opacity-60 grayscale border-t-8 border-t-slate-300">
-                <div class="flex justify-between items-start mb-6">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Module 06</span>
-                    <span class="status-badge bg-slate-100 text-slate-500">Upcoming</span>
+            <!-- Week 5 Module (PYQs) -->
+            <a href="week5_pyqs.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-amber-500 hover:border-amber-500 bg-amber-50/30">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] font-black text-amber-600 uppercase tracking-widest">Week 05</span>
+                        <span class="status-badge bg-amber-100 text-amber-800">PYQs</span>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-amber-600 transition-colors">Optimization (PYQs)</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
+                        Solving applied LPP formulations and primal-dual binding analyses.
+                    </p>
                 </div>
-                <h3 class="text-2xl font-extrabold text-slate-400 mb-3">Time Series Analysis</h3>
-                <p class="text-slate-400 text-sm leading-relaxed mb-6 italic">
-                    Forecasting trends, seasonality, and moving averages for business intelligence.
-                </p>
-                <div class="text-slate-300 font-bold text-sm">Coming Soon...</div>
-            </div>
+                <div class="flex items-center gap-2 text-amber-600 font-bold text-sm">
+                    View Practice <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <!-- Week 6 Module (Theory) -->
+            <a href="week6.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-violet-500 hover:border-violet-500">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] font-black text-violet-500 uppercase tracking-widest">Week 06</span>
+                        <span class="status-badge bg-violet-50 text-violet-700">Theory</span>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-violet-600 transition-colors">Multiple Linear Regression</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
+                        Multi-variable inputs, interpreting partial slopes, multicollinearity, and Adjusted R².
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-violet-600 font-bold text-sm">
+                    View Guide <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <!-- Week 6 Module (ANOVA) -->
+            <a href="week6_anova.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-fuchsia-500 hover:border-fuchsia-500 bg-fuchsia-50/30">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] font-black text-fuchsia-500 uppercase tracking-widest">Week 06</span>
+                        <span class="status-badge bg-fuchsia-100 text-fuchsia-700">Output</span>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-fuchsia-600 transition-colors">MLR ANOVA Output</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
+                        Deconstructing Excel's regression output: statistics, F-tests, and intervals.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-fuchsia-600 font-bold text-sm">
+                    View Analysis <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <!-- Week 6 Module (PYQs) -->
+            <a href="week6_pyqs.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-rose-500 hover:border-rose-500 bg-rose-50/30">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] font-black text-rose-500 uppercase tracking-widest">Week 06</span>
+                        <span class="status-badge bg-rose-100 text-rose-700">PYQs</span>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-rose-600 transition-colors">MLR (PYQs)</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
+                        Reverse-engineering ANOVA tables, path diagrams, and spotting statistical traps.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-rose-600 font-bold text-sm">
+                    View Practice <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <!-- Week 7 Module (Theory) -->
+            <a href="week7.html" class="glass-card p-8 group flex flex-col justify-between h-full border-t-8 border-t-teal-500 hover:border-teal-500">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] font-black text-teal-600 uppercase tracking-widest">Week 07</span>
+                        <span class="status-badge bg-teal-50 text-teal-700">Theory</span>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-3 group-hover:text-teal-600 transition-colors">Logistic Regression</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6 italic">
+                        Categorical outcomes, Logits, Confusion Matrices, Precision & Recall.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-teal-600 font-bold text-sm">
+                    View Guide <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+            </a>
 
         </div>
 
         <!-- Footer -->
         <footer class="mt-32 pb-12 text-center">
             <div class="h-px w-24 bg-slate-200 mx-auto mb-8"></div>
-            <p class="text-[10px] font-black uppercase tracking-[0.8em] text-slate-300">
+            <p class="text-[10px] font-black uppercase tracking-[0.8em] text-slate-400">
                 &copy; 2024 • Business Analytics Repository
             </p>
         </footer>
